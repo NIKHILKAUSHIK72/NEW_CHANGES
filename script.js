@@ -1,4 +1,3 @@
-// script.js
 document.addEventListener("DOMContentLoaded", function() {
     const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTuFQgA8IkJFk4SXreMAjvy0ICZY3f1dYeiDIe5sxhp1EEaL5B-iSRzuzH-GSkBYclPapzOXIGyXKsc/pub?output=csv";
     
@@ -18,14 +17,22 @@ document.addEventListener("DOMContentLoaded", function() {
         const headers = rows[0].split(',');
         const data = rows.slice(1).map(row => row.split(','));
 
-        // Fetch the start and end dates from the inputs
+        // Fetch the start and end dates from the inputs and convert them to Date objects
         const startDate = document.getElementById('start-date').value;
         const endDate = document.getElementById('end-date').value;
 
+        const startDateObj = startDate ? new Date(startDate) : null;
+        const endDateObj = endDate ? new Date(endDate) : null;
+
         // Filter data based on the selected date range
         const filteredData = data.filter(row => {
-            const rowDate = row[0];  // Assume the first column is the date
-            return (!startDate || rowDate >= startDate) && (!endDate || rowDate <= endDate);
+            const rowDate = new Date(row[0]);  // Assuming first column is the date
+
+            // Return true if the row's date is within the range
+            return (
+                (!startDateObj || rowDate >= startDateObj) &&
+                (!endDateObj || rowDate <= endDateObj)
+            );
         });
 
         // If filteredData is empty, show a message or use default data
